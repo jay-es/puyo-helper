@@ -1,33 +1,74 @@
 <template>
   <div id="app">
-    <img src="./assets/logo.png">
     <h1></h1>
     <h2>Essential Links</h2>
-    <ul>
-      <li><a href="https://vuejs.org" target="_blank">Core Docs</a></li>
-      <li><a href="https://forum.vuejs.org" target="_blank">Forum</a></li>
-      <li><a href="https://gitter.im/vuejs/vue" target="_blank">Gitter Chat</a></li>
-      <li><a href="https://twitter.com/vuejs" target="_blank">Twitter</a></li>
-    </ul>
-    <h2>Ecosystem</h2>
-    <ul>
-      <li><a href="http://router.vuejs.org/" target="_blank">vue-router</a></li>
-      <li><a href="http://vuex.vuejs.org/" target="_blank">vuex</a></li>
-      <li><a href="http://vue-loader.vuejs.org/" target="_blank">vue-loader</a></li>
-      <li><a href="https://github.com/vuejs/awesome-vue" target="_blank">awesome-vue</a></li>
-    </ul>
+
+    <label v-for="(colorName, ci) of colors">
+      <input type="radio" :value="ci" v-model="currentColor">{{ colorName }}
+    </label>
+
+    <input-table
+      :table-data="tableData"
+      :current-color="currentColor"
+      :current-shape="currentShape"
+    ></input-table>
+
+    <textarea :value="resultText"></textarea>
   </div>
 </template>
 
 <script>
+import inputTable from './components/inputTable.vue';
+
 export default {
+  components: {
+    inputTable,
+  },
   name: 'app',
-  data () {
+  data() {
     return {
-      msg: 'Welcome to Your Vue.js App'
+      colors: ['blank', 'blue', 'green', 'purple', 'red', 'yellow'],
+      shapes: [''],
+      rowNum: 7,
+      colNum: 5,
+      tableData: [],
+      currentColor: 0,
+      currentShape: '',
+    };
+  },
+  computed: {
+    resultText() {
+      return this.tableData.map((row) => (
+        row.map((col) => {
+          if (col.color === 0) {
+            return ':puyo_blk:';
+          }
+
+          const color = this.colors[col.color].substr(0, 1);
+
+          return `:puyo_${color}${col.shape}:`;
+        }).join('')
+      )).join('\n');
+    },
+  },
+  methods: {
+    makeNewCell(color = 0, shape = '') {
+      return {
+        color,
+        shape,
+      };
+    },
+  },
+  created() {
+    for (let ri = 0; ri < this.rowNum; ri++) {
+      this.tableData.push([]);
+
+      for (let ci = 0; ci < this.colNum; ci++) {
+        this.tableData[ri].push(this.makeNewCell());
+      }
     }
-  }
-}
+  },
+};
 </script>
 
 <style lang="scss">
@@ -56,5 +97,10 @@ li {
 
 a {
   color: #42b983;
+}
+
+textarea {
+  width: 50em;
+  height: 10em;
 }
 </style>
