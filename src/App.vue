@@ -1,8 +1,5 @@
 <template>
   <div id="app">
-    <h1></h1>
-    <h2>Essential Links</h2>
-
     <label v-for="(colorName, ci) of colors">
       <input type="radio" :value="ci" v-model="currentColor">{{ colorName }}
     </label>
@@ -78,7 +75,6 @@ export default {
   -moz-osx-font-smoothing: grayscale;
   text-align: center;
   color: #2c3e50;
-  margin-top: 60px;
 }
 
 h1, h2 {
