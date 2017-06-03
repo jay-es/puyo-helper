@@ -12,12 +12,17 @@
 
 <script>
 export default {
-  props: ['currentColor', 'currentShape', 'tableData'],
+  props: ['currentColor', 'currentShape', 'tableData', 'isAutoShaping'],
   methods: {
     inputCell(ri, ci) {
       this.tableData[ri][ci].color = this.currentColor;
-      this.adjustShape(ri, ci);
-      this.walkArround(ri, ci, this.adjustShape);
+
+      if (this.isAutoShaping) {
+        this.adjustShape(ri, ci);
+        this.walkArround(ri, ci, this.adjustShape);
+      } else {
+        this.tableData[ri][ci].shape = this.currentShape;
+      }
     },
 
     // 形状を整える
@@ -62,7 +67,6 @@ table {
   margin: 10px auto;
   border: 1px solid $borderColor;
   border-collapse: collapse;
-  user-select: none;
 }
 
 td {
@@ -71,37 +75,5 @@ td {
   width: 16px;
   height: 16px;
   cursor: pointer;
-}
-
-.cell {
-  $cellPadding: 2px;
-  position: absolute;
-  top: $cellPadding;
-  right: $cellPadding;
-  bottom: $cellPadding;
-  left: $cellPadding;
-  border-radius: 50%;
-
-  &[data-color="1"] { background-color: #25c; }
-  &[data-color="2"] { background-color: #0a2; }
-  &[data-color="3"] { background-color: #80d; }
-  &[data-color="4"] { background-color: #c12; }
-  &[data-color="5"] { background-color: #fb1; }
-
-  &::before,
-  &::after {
-    content: '';
-    position: absolute;
-    top: $cellPadding;
-    right: $cellPadding;
-    bottom: $cellPadding;
-    left: $cellPadding;
-    background-color: inherit;
-  }
-
-  &[data-shape*="u"]::before { top: -$cellPadding; }
-  &[data-shape*="d"]::before { bottom: -$cellPadding; }
-  &[data-shape*="r"]::after { right: -$cellPadding; }
-  &[data-shape*="l"]::after { left: -$cellPadding; }
 }
 </style>

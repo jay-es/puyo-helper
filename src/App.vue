@@ -1,13 +1,35 @@
 <template>
   <div id="app">
-    <label v-for="(colorName, ci) of colors">
-      <input type="radio" :value="ci" v-model="currentColor">{{ colorName }}
-    </label>
+    <fieldset>
+      <legend>Color</legend>
+      <label v-for="(colorName, ci) of colors">
+        <input type="radio" :value="ci" v-model="currentColor">{{ colorName }}
+      </label>
+    </fieldset>
+
+    <fieldset>
+      <legend>Shape</legend>
+
+      <label>
+        <input type="radio" :value="true" v-model="isAutoShaping">Auto
+      </label>
+
+      <label>
+        <input type="radio" :value="false" v-model="isAutoShaping">Custom
+      </label>
+    </fieldset>
+
+    <shape-option
+      :class="{ hidden: isAutoShaping }"
+      :current-color="currentColor"
+      :current-shape.sync="currentShape"
+    ></shape-option>
 
     <input-table
       :table-data="tableData"
       :current-color="currentColor"
       :current-shape="currentShape"
+      :is-auto-shaping="isAutoShaping"
     ></input-table>
 
     <textarea :value="resultText"></textarea>
@@ -16,10 +38,12 @@
 
 <script>
 import inputTable from './components/inputTable.vue';
+import shapeOption from './components/shapeOption.vue';
 
 export default {
   components: {
     inputTable,
+    shapeOption,
   },
   name: 'app',
   data() {
@@ -31,6 +55,7 @@ export default {
       tableData: [],
       currentColor: 0,
       currentShape: '',
+      isAutoShaping: true,
     };
   },
   computed: {
@@ -75,24 +100,51 @@ export default {
   -moz-osx-font-smoothing: grayscale;
   text-align: center;
   color: #2c3e50;
+  user-select: none;
 }
 
-h1, h2 {
-  font-weight: normal;
-}
-
-ul {
-  list-style-type: none;
-  padding: 0;
-}
-
-li {
+fieldset {
   display: inline-block;
-  margin: 0 10px;
+  border: 1px solid #ccc;
+}
+input {
+  cursor: pointer;
 }
 
-a {
-  color: #42b983;
+.hidden {
+  visibility: hidden;
+}
+
+.cell {
+  $cellPadding: 2px;
+  position: absolute;
+  top: $cellPadding;
+  right: $cellPadding;
+  bottom: $cellPadding;
+  left: $cellPadding;
+  border-radius: 50%;
+
+  &[data-color="1"] { background-color: #25c; }
+  &[data-color="2"] { background-color: #0a2; }
+  &[data-color="3"] { background-color: #80d; }
+  &[data-color="4"] { background-color: #c12; }
+  &[data-color="5"] { background-color: #fb1; }
+
+  &::before,
+  &::after {
+    content: '';
+    position: absolute;
+    top: $cellPadding;
+    right: $cellPadding;
+    bottom: $cellPadding;
+    left: $cellPadding;
+    background-color: inherit;
+  }
+
+  &[data-shape*="u"]::before { top: -$cellPadding; }
+  &[data-shape*="d"]::before { bottom: -$cellPadding; }
+  &[data-shape*="r"]::after { right: -$cellPadding; }
+  &[data-shape*="l"]::after { left: -$cellPadding; }
 }
 
 textarea {
