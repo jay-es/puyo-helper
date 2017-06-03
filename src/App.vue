@@ -1,6 +1,19 @@
 <template>
   <div id="app">
     <fieldset>
+      <legend>Size</legend>
+      <label>
+        Rows
+        <input type="number" min="1" v-model.number="rowNum">
+      </label>
+
+      <label>
+        Cols
+        <input type="number" min="1" v-model.number="colNum">
+      </label>
+    </fieldset>
+
+    <fieldset>
       <legend>Color</legend>
       <label v-for="(colorName, ci) of colors">
         <input type="radio" :value="ci" v-model="currentColor">{{ colorName }}
@@ -80,15 +93,49 @@ export default {
         shape,
       };
     },
+    /**
+     * 行を追加
+     * @param {number} rows 追加する行数
+     */
+    addRows(rows) {
+      const orgLen = this.tableData.length;
+
+      for (let ri = 0; ri < rows; ri++) {
+        this.tableData.push([]);
+        this.addCols(this.tableData[orgLen + ri], this.colNum);
+      }
+    },
+    /**
+     * 列を追加
+     * @param {array} row 追加する行
+     * @param {number} cols 追加する列数
+     */
+    addCols(row, cols) {
+      for (let ci = 0; ci < cols; ci++) {
+        row.push(this.makeNewCell(0));
+      }
+    },
+  },
+  watch: {
+    rowNum(newVal, oldVal) {
+      if (newVal > oldVal) {
+        this.addRows(newVal - oldVal);
+      } else {
+        this.tableData.splice(newVal - oldVal, oldVal);
+      }
+    },
+    colNum(newVal, oldVal) {
+      this.tableData.forEach((row) => {
+        if (newVal > oldVal) {
+          this.addCols(row, newVal - oldVal);
+        } else {
+          row.splice(newVal - oldVal, oldVal);
+        }
+      });
+    },
   },
   created() {
-    for (let ri = 0; ri < this.rowNum; ri++) {
-      this.tableData.push([]);
-
-      for (let ci = 0; ci < this.colNum; ci++) {
-        this.tableData[ri].push(this.makeNewCell());
-      }
-    }
+    this.addRows(this.rowNum);
   },
 };
 </script>
@@ -107,8 +154,14 @@ fieldset {
   display: inline-block;
   border: 1px solid #ccc;
 }
-input {
+input[type="radio"],
+input[type="checkbox"] {
   cursor: pointer;
+}
+
+input[type="number"] {
+  margin-bottom: -2px;
+  width: 40px;
 }
 
 .hidden {
