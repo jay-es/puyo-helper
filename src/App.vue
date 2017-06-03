@@ -72,8 +72,32 @@ export default {
     };
   },
   computed: {
+    trimmed() {
+      // tableDataを複製
+      const arr = this.tableData.map((row) => row.concat());
+
+      // 末尾の空の行を削除
+      for (let ri = this.rowNum; ri--;) {
+        const isEmptyRow = arr[ri].every(col => col.color === 0);
+
+        if (!isEmptyRow) break;
+
+        arr.splice(-1, 1);
+      }
+
+      // 末尾の空の列を削除
+      for (let ci = this.colNum; ci--;) {
+        const isEmptyCol = arr.every(row => row[ci].color === 0);
+
+        if (!isEmptyCol) break;
+
+        arr.forEach(row => row.splice(-1, 1));
+      }
+
+      return arr;
+    },
     resultText() {
-      return this.tableData.map((row) => (
+      return this.trimmed.map((row) => (
         row.map((col) => {
           if (col.color === 0) {
             return ':puyo_blk:';
