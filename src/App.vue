@@ -218,10 +218,11 @@ input[type="number"] {
     background-color: inherit;
   }
 
-  &[data-shape*="u"]::before { top: -$cellPadding; }
-  &[data-shape*="d"]::before { bottom: -$cellPadding; }
-  &[data-shape*="r"]::after { right: -$cellPadding; }
-  &[data-shape*="l"]::after { left: -$cellPadding; }
+  $connection: -($cellPadding + 1px);
+  &[data-shape*="u"]::before { top: $connection; }
+  &[data-shape*="d"]::before { bottom: $connection; }
+  &[data-shape*="r"]::after { right: $connection; }
+  &[data-shape*="l"]::after { left: $connection; }
 }
 
 textarea {

@@ -71,7 +71,7 @@ table {
 
 td {
   position: relative;
-  border: 1px solid $borderColor;
+  border: 1px dotted $borderColor;
   width: 16px;
   height: 16px;
   cursor: pointer;
