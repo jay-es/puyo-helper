@@ -2,7 +2,9 @@
   <table>
     <tbody>
       <tr v-for="(row, ri) of tableData">
-        <td v-for="(col, ci) of row" @click="inputCell(ri, ci)">
+        <td v-for="(col, ci) of row"
+          @click="inputCell(ri, ci)" @contextmenu.prevent="inputCell(ri, ci, true)"
+        >
           <span class="cell" :data-color="col.color" :data-shape="col.shape"><br></span>
         </td>
       </tr>
@@ -14,8 +16,8 @@
 export default {
   props: ['currentColor', 'currentShape', 'tableData', 'isAutoShaping'],
   methods: {
-    inputCell(ri, ci) {
-      this.tableData[ri][ci].color = this.currentColor;
+    inputCell(ri, ci, isBlank) {
+      this.tableData[ri][ci].color = isBlank ? 0 : this.currentColor;
 
       if (this.isAutoShaping) {
         this.adjustShape(ri, ci);
