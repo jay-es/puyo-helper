@@ -42,7 +42,6 @@ export default {
       if (this.right) shape += 'r';
       if (this.left) shape += 'l';
 
-      console.log(shape);
       this.$emit('update:currentShape', shape);
     },
   },

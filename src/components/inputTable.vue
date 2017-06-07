@@ -48,7 +48,7 @@ export default {
     // 上下左右で処理を行う
     walkArround(ri, ci, fn) {
       if (typeof fn !== 'function') {
-        throw new TypeError('inputTable#walkArround: 第三引数が関数ではない')
+        throw new TypeError('inputTable#walkArround: 第三引数が関数ではない');
       }
 
       const arr = [[ri - 1, ci], [ri + 1, ci], [ri, ci + 1], [ri, ci - 1]];
