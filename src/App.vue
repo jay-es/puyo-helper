@@ -61,12 +61,12 @@ export default {
   name: 'app',
   data() {
     return {
-      colors: ['blank', 'blue', 'green', 'purple', 'red', 'yellow'],
+      colors: ['blank', 'red', 'blue', 'green', 'yellow', 'purple'],
       shapes: [''],
       rowNum: 7,
       colNum: 5,
       tableData: [],
-      currentColor: 0,
+      currentColor: 1,
       currentShape: '',
       isAutoShaping: true,
     };
@@ -201,11 +201,11 @@ input[type="number"] {
   left: $cellPadding;
   border-radius: 50%;
 
-  &[data-color="1"] { background-color: #25c; }
-  &[data-color="2"] { background-color: #0a2; }
-  &[data-color="3"] { background-color: #80d; }
-  &[data-color="4"] { background-color: #c12; }
-  &[data-color="5"] { background-color: #fb1; }
+  &[data-color="1"] { background-color: #c12; }
+  &[data-color="2"] { background-color: #25c; }
+  &[data-color="3"] { background-color: #0a2; }
+  &[data-color="4"] { background-color: #fb1; }
+  &[data-color="5"] { background-color: #80d; }
 
   &::before,
   &::after {
