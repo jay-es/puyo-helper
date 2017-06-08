@@ -79,6 +79,9 @@ export default {
       } else if (buttons === 2) { // 右ボタン
         this.inputCell(ri, ci, BLANK);
       }
+
+      // 右ドラッグでマウスジェスチャが反応しないようにする
+      $event.stopPropagation();
     },
   },
 };
