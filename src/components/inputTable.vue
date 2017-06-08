@@ -1,15 +1,18 @@
 <template>
-  <table>
-    <tbody>
-      <tr v-for="(row, ri) of tableData">
-        <td v-for="(col, ci) of row"
-          @click="inputCell(ri, ci)" @contextmenu.prevent="inputCell(ri, ci, true)"
-        >
-          <span class="cell" :data-color="col.color" :data-shape="col.shape"><br></span>
-        </td>
-      </tr>
-    </tbody>
-  </table>
+  <div @contextmenu.prevent>
+    <table>
+      <tbody>
+        <tr v-for="(row, ri) of tableData">
+          <td v-for="(col, ci) of row"
+            @mousedown="mouseEventHandler($event, ri, ci)"
+            @mouseover="mouseEventHandler($event, ri, ci)"
+          >
+            <span class="cell" :data-color="col.color" :data-shape="col.shape"><br></span>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
 </template>
 
 <script>
@@ -58,6 +61,17 @@ export default {
           fn(...v, i);
         }
       });
+    },
+
+    // クリック+ドラッグ
+    mouseEventHandler($event, ri, ci) {
+      const buttons = $event.buttons;
+
+      if (buttons === 1) { // 左ボタン
+        this.inputCell(ri, ci);
+      } else if (buttons === 2) { // 右ボタン
+        this.inputCell(ri, ci, true);
+      }
     },
   },
 };
