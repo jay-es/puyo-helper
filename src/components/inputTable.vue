@@ -16,6 +16,10 @@
 </template>
 
 <script>
+// ojama,blankのインデックス
+const OJAMA = 5;
+const BLANK = 6;
+
 export default {
   props: ['currentColor', 'currentShape', 'tableData', 'isAutoShaping'],
   methods: {
@@ -34,11 +38,14 @@ export default {
     adjustShape(ri, ci) {
       let shape = '';
 
-      this.walkArround(ri, ci, (r2, c2, i) => {
-        if (this.tableData[r2][c2].color === this.tableData[ri][ci].color) {
-          shape += 'udrl'[i];
-        }
-      });
+      // 5色の場合のみ
+      if (this.tableData[ri][ci].color < OJAMA) {
+        this.walkArround(ri, ci, (r2, c2, i) => {
+          if (this.tableData[r2][c2].color === this.tableData[ri][ci].color) {
+            shape += 'udrl'[i];
+          }
+        });
+      }
 
       this.tableData[ri][ci].shape = shape;
     },
@@ -70,7 +77,7 @@ export default {
       if (buttons === 1) { // 左ボタン
         this.inputCell(ri, ci, this.currentColor);
       } else if (buttons === 2) { // 右ボタン
-        this.inputCell(ri, ci, 0);
+        this.inputCell(ri, ci, BLANK);
       }
     },
   },

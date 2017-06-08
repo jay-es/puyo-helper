@@ -53,6 +53,9 @@
 import inputTable from './components/inputTable.vue';
 import shapeOption from './components/shapeOption.vue';
 
+// blankのインデックス
+const BLANK = 6;
+
 export default {
   components: {
     inputTable,
@@ -61,12 +64,12 @@ export default {
   name: 'app',
   data() {
     return {
-      colors: ['blank', 'red', 'blue', 'green', 'yellow', 'purple'],
+      colors: ['red', 'blue', 'green', 'yellow', 'purple', 'ojama', 'blank'],
       shapes: [''],
       rowNum: 7,
       colNum: 5,
       tableData: [],
-      currentColor: 1,
+      currentColor: 0,
       currentShape: '',
       isAutoShaping: true,
     };
@@ -78,7 +81,7 @@ export default {
 
       // 末尾の空の行を削除
       for (let ri = this.rowNum; ri--;) {
-        const isEmptyRow = arr[ri].every(col => col.color === 0);
+        const isEmptyRow = arr[ri].every(col => col.color === BLANK);
 
         if (!isEmptyRow) break;
 
@@ -87,7 +90,7 @@ export default {
 
       // 末尾の空の列を削除
       for (let ci = this.colNum; ci--;) {
-        const isEmptyCol = arr.every(row => row[ci].color === 0);
+        const isEmptyCol = arr.every(row => row[ci].color === BLANK);
 
         if (!isEmptyCol) break;
 
@@ -99,7 +102,7 @@ export default {
     resultText() {
       return this.trimmed.map((row) => (
         row.map((col) => {
-          if (col.color === 0) {
+          if (col.color === BLANK) {
             return ':puyo_blk:';
           }
 
@@ -111,7 +114,7 @@ export default {
     },
   },
   methods: {
-    makeNewCell(color = 0, shape = '') {
+    makeNewCell(color = BLANK, shape = '') {
       return {
         color,
         shape,
@@ -136,7 +139,7 @@ export default {
      */
     addCols(row, cols) {
       for (let ci = 0; ci < cols; ci++) {
-        row.push(this.makeNewCell(0));
+        row.push(this.makeNewCell());
       }
     },
   },
@@ -201,11 +204,12 @@ input[type="number"] {
   left: $cellPadding;
   border-radius: 50%;
 
-  &[data-color="1"] { background-color: #c12; }
-  &[data-color="2"] { background-color: #25c; }
-  &[data-color="3"] { background-color: #0a2; }
-  &[data-color="4"] { background-color: #fb1; }
-  &[data-color="5"] { background-color: #80d; }
+  &[data-color="0"] { background-color: #c12; }
+  &[data-color="1"] { background-color: #25c; }
+  &[data-color="2"] { background-color: #0a2; }
+  &[data-color="3"] { background-color: #fb1; }
+  &[data-color="4"] { background-color: #80d; }
+  &[data-color="5"] { background-color: #999; }
 
   &::before,
   &::after {
