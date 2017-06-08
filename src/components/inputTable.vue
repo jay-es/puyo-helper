@@ -19,8 +19,8 @@
 export default {
   props: ['currentColor', 'currentShape', 'tableData', 'isAutoShaping'],
   methods: {
-    inputCell(ri, ci, isBlank) {
-      this.tableData[ri][ci].color = isBlank ? 0 : this.currentColor;
+    inputCell(ri, ci, color) {
+      this.tableData[ri][ci].color = color;
 
       if (this.isAutoShaping) {
         this.adjustShape(ri, ci);
@@ -68,9 +68,9 @@ export default {
       const buttons = $event.buttons;
 
       if (buttons === 1) { // 左ボタン
-        this.inputCell(ri, ci);
+        this.inputCell(ri, ci, this.currentColor);
       } else if (buttons === 2) { // 右ボタン
-        this.inputCell(ri, ci, true);
+        this.inputCell(ri, ci, 0);
       }
     },
   },
