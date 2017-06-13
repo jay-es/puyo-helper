@@ -14,6 +14,14 @@
     </fieldset>
 
     <fieldset>
+      <legend>Move</legend>
+      <button @click="shiftRow(-1)">↑</button>
+      <button @click="shiftRow(+1)">↓</button>
+      <button @click="shiftCol(-1)">←</button>
+      <button @click="shiftCol(+1)">→</button>
+    </fieldset>
+
+    <fieldset>
       <legend>Color</legend>
       <label v-for="(colorName, ci) of colors">
         <input type="radio" :value="ci" v-model="currentColor">{{ colorName }}
@@ -142,6 +150,30 @@ export default {
         row.push(this.makeNewCell());
       }
     },
+    /**
+     * 上下に移動
+     * @param {number} dir 移動する方向
+     */
+    shiftRow(dir) {
+      if (dir > 0) {
+        this.tableData.unshift(this.tableData.pop());
+      } else {
+        this.tableData.push(this.tableData.shift());
+      }
+    },
+    /**
+     * 左右に移動
+     * @param {number} dir 移動する方向
+     */
+    shiftCol(dir) {
+      this.tableData.forEach((row) => {
+        if (dir > 0) {
+          row.unshift(row.pop());
+        } else {
+          row.push(row.shift());
+        }
+      });
+    },
   },
   watch: {
     rowNum(newVal, oldVal) {
@@ -184,10 +216,13 @@ fieldset {
 input[type="radio"],
 input[type="checkbox"] {
   cursor: pointer;
+
+  fieldset & {
+    margin-bottom: 6px;
+  }
 }
 
 input[type="number"] {
-  margin-bottom: -2px;
   width: 40px;
 }
 
