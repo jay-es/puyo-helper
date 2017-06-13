@@ -246,22 +246,24 @@ input[type="number"] {
   &[data-color="4"] { background-color: #80d; }
   &[data-color="5"] { background-color: #999; }
 
-  &::before,
-  &::after {
-    content: '';
-    position: absolute;
-    top: $cellPadding;
-    right: $cellPadding;
-    bottom: $cellPadding;
-    left: $cellPadding;
-    background-color: inherit;
-  }
+  &:not([data-color="5"]) {
+    &::before,
+    &::after {
+      content: '';
+      position: absolute;
+      top: $cellPadding;
+      right: $cellPadding;
+      bottom: $cellPadding;
+      left: $cellPadding;
+      background-color: inherit;
+    }
 
-  $connection: -($cellPadding + 1px);
-  &[data-shape*="u"]::before { top: $connection; }
-  &[data-shape*="d"]::before { bottom: $connection; }
-  &[data-shape*="r"]::after { right: $connection; }
-  &[data-shape*="l"]::after { left: $connection; }
+    $connection: -($cellPadding + 1px);
+    &[data-shape*="u"]::before { top: $connection; }
+    &[data-shape*="d"]::before { bottom: $connection; }
+    &[data-shape*="r"]::after { right: $connection; }
+    &[data-shape*="l"]::after { left: $connection; }
+  }
 }
 
 textarea {

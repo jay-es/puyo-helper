@@ -30,7 +30,7 @@ export default {
         this.adjustShape(ri, ci);
         this.walkArround(ri, ci, this.adjustShape);
       } else {
-        this.tableData[ri][ci].shape = this.currentShape;
+        this.tableData[ri][ci].shape = this.currentColor < OJAMA ? this.currentShape : '';
       }
     },
 
