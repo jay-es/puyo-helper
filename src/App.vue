@@ -53,7 +53,8 @@
       :is-auto-shaping="isAutoShaping"
     ></input-table>
 
-    <textarea :value="resultText"></textarea>
+    <textarea ref="resultText" :value="resultText"></textarea><br>
+    <button @click="decode()">Decode</button>
   </div>
 </template>
 
@@ -73,7 +74,6 @@ export default {
   data() {
     return {
       colors: ['red', 'blue', 'green', 'yellow', 'purple', 'ojama', 'blank'],
-      shapes: [''],
       rowNum: 7,
       colNum: 5,
       tableData: [],
@@ -85,7 +85,7 @@ export default {
   computed: {
     trimmed() {
       // tableDataを複製
-      const arr = this.tableData.map((row) => row.concat());
+      const arr = this.tableData.map(row => row.concat());
 
       // 末尾の空の行を削除
       for (let ri = this.rowNum; ri--;) {
@@ -171,6 +171,34 @@ export default {
           row.unshift(row.pop());
         } else {
           row.push(row.shift());
+        }
+      });
+    },
+
+    // 文字列からデータに戻す
+    decode() {
+      const arr = this.$refs.resultText.value.split('\n').map(row => row.slice(1, -1).split('::'));
+      const colorMap = {};
+      this.colors.slice(0, 6).forEach((v, i) => { colorMap[v.charAt(0)] = i; });
+
+      this.rowNum = arr.length;
+      this.colNum = arr[0].length;
+
+      this.$nextTick(() => {
+        for (let ri = 0; ri < this.rowNum; ri++) {
+          for (let ci = 0; ci < this.colNum; ci++) {
+            const cell = arr[ri][ci];
+            let ret = this.makeNewCell();
+
+            if (cell && cell !== 'puyo_blk' && cell.substr(0, 5) === 'puyo_') {
+              const colorInitial = cell.substr(5, 1);
+              const shape = colorInitial === 'o' ? '' : cell.substr(6);
+
+              ret = this.makeNewCell(colorMap[colorInitial], shape);
+            }
+
+            this.$set(this.tableData[ri], ci, ret);
+          }
         }
       });
     },
@@ -267,7 +295,7 @@ input[type="number"] {
 }
 
 textarea {
-  width: 50em;
+  width: 70em;
   height: 10em;
 }
 </style>
