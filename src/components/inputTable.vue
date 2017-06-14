@@ -1,5 +1,8 @@
 <template>
-  <div @contextmenu.prevent>
+  <div
+    @contextmenu.prevent
+    @mousemove="doDrag"
+  >
     <table>
       <tbody>
         <tr v-for="(row, ri) of tableData">
@@ -12,6 +15,7 @@
         </tr>
       </tbody>
     </table>
+    <span class="sizer" @mousedown="startDrag">●</span>
   </div>
 </template>
 
@@ -20,8 +24,11 @@
 const OJAMA = 5;
 const BLANK = 6;
 
+// ドラッグでサイズ変更する際に、スタート時の状態を保存するためのオブジェクト
+const drag = {};
+
 export default {
-  props: ['currentColor', 'currentShape', 'tableData', 'isAutoShaping'],
+  props: ['currentColor', 'currentShape', 'tableData', 'isAutoShaping', 'rowNum', 'colNum'],
   methods: {
     inputCell(ri, ci, color) {
       this.tableData[ri][ci].color = color;
@@ -72,6 +79,9 @@ export default {
 
     // クリック+ドラッグ
     mouseEventHandler($event, ri, ci) {
+      // サイズ変更中は無視
+      if (drag.isDragging) return;
+
       const buttons = $event.buttons;
 
       if (buttons === 1) { // 左ボタン
@@ -83,13 +93,48 @@ export default {
       // 右ドラッグでマウスジェスチャが反応しないようにする
       $event.stopPropagation();
     },
+
+    startDrag($event) {
+      drag.isDragging = true;
+      drag.startX = $event.x;
+      drag.startY = $event.y;
+      drag.rowNum = this.rowNum;
+      drag.colNum = this.colNum;
+    },
+    endDrag() {
+      drag.isDragging = false;
+    },
+    doDrag($event) {
+      if (!drag.isDragging || $event.buttons !== 1) return;
+
+      const deltaRow = Math.round(($event.y - drag.startY) / 19);
+      const deltaCol = Math.round(($event.x - drag.startX) / 19 * 2);
+
+      this.$emit('update:rowNum', drag.rowNum + deltaRow);
+      this.$nextTick(() => {
+        this.$emit('update:colNum', drag.colNum + deltaCol);
+      });
+    },
+  },
+  created() {
+    document.addEventListener('mouseup', this.endDrag);
   },
 };
 </script>
 <style lang="scss" scoped>
 $borderColor: #ccc;
 
+div {
+  padding-bottom: 3em;
+}
+
+.sizer {
+  cursor: nw-resize;
+}
+
 table {
+  display: inline-table;
+  vertical-align: text-bottom;
   margin: 10px auto;
   border: 1px solid $borderColor;
   border-collapse: collapse;

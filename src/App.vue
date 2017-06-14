@@ -51,6 +51,8 @@
       :current-color="currentColor"
       :current-shape="currentShape"
       :is-auto-shaping="isAutoShaping"
+      :row-num.sync="rowNum"
+      :col-num.sync="colNum"
     ></input-table>
 
     <textarea ref="resultText" :value="resultText"></textarea><br>
