@@ -204,18 +204,32 @@ export default {
     },
   },
   watch: {
-    rowNum(newVal, oldVal) {
+    rowNum(newVal) {
+      // 1未満だったら1にする
+      if (Number(newVal) < 1) {
+        this.rowNum = 1;
+        return;
+      }
+
+      const oldVal = this.tableData.length;
       if (newVal > oldVal) {
         this.addRows(newVal - oldVal);
-      } else {
+      } else if (newVal < oldVal) {
         this.tableData.splice(newVal - oldVal, oldVal);
       }
     },
-    colNum(newVal, oldVal) {
+    colNum(newVal) {
+      // 1未満だったら1にする
+      if (Number(newVal) < 1) {
+        this.colNum = 1;
+        return;
+      }
+
+      const oldVal = this.tableData[0].length;
       this.tableData.forEach((row) => {
         if (newVal > oldVal) {
           this.addCols(row, newVal - oldVal);
-        } else {
+        } else if (newVal < oldVal) {
           row.splice(newVal - oldVal, oldVal);
         }
       });
